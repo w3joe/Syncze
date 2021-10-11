@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "950708695290",
+    "firebase_url": "https://t4g-watch-tracker-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "t4g-watch-tracker",
+    "storage_bucket": "t4g-watch-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950708695290:android:80e5d4295279335b575943",
+        "android_client_info": {
+          "package_name": "com.t4g.location_tracking_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950708695290-2lqaefkp7cp1smtehd7crravb73kooug.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcHijaf5nzFy83uWjQJWXUOqqvYCH8NWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950708695290-2lqaefkp7cp1smtehd7crravb73kooug.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
