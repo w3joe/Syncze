@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/tanwe/Desktop/2021_T4G_EngineeringGood/Tracker-Watch/AndroidApp/app/src/main/res/layout/activity_main.xml" value="0.2695035460992908" />
+        <entry key="..\:/Users/tanwe/Desktop/2021_T4G_EngineeringGood/Tracker-Watch/AndroidApp/app/src/main/res/drawable/ic_app_logo.xml" value="0.4036458333333333" />
+        <entry key="..\:/Users/tanwe/Desktop/2021_T4G_EngineeringGood/Tracker-Watch/AndroidApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/tanwe/Desktop/2021_T4G_EngineeringGood/Tracker-Watch/AndroidApp/app/src/main/res/layout/activity_maps.xml" value="0.3875" />
       </map>
     </option>
   </component>

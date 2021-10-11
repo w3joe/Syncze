@@ -46,13 +46,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mMap = googleMap;
+        //Refreshes Map Automatically
         addPostEventListener(mDatabase);
-        //Add Progress Bar if data loading is too slow
 
 
     }
 
-    //Retrives current coordinates and fall detection status from Firebaes
+    //Retrives current coordinates and fall detection status from Firebase
     private void addPostEventListener(DatabaseReference mPostReference) {
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
@@ -60,11 +60,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 CurrentData currentData = dataSnapshot.getValue(CurrentData.class);
+                mMap.clear();
                 lat = currentData.getCurrentLat();
                 lon = currentData.getCurrentLon();
                 LatLng currentLoc = new LatLng(lat, lon);
-                mMap.addMarker(new MarkerOptions().position(currentLoc).title("Current User's Location"));
+                mMap.addMarker(new MarkerOptions().position(currentLoc).title("Current Location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
+
+                boolean fallStatus;
+                fallStatus = currentData.isFallStatus();
+                if(fallStatus)
+                {
+                    //notification
+                }
             }
 
             @Override
