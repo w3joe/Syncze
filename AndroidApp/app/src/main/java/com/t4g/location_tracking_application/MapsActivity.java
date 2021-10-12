@@ -1,7 +1,12 @@
 package com.t4g.location_tracking_application;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -23,10 +28,8 @@ import com.t4g.location_tracking_application.databinding.ActivityMapsBinding;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityMapsBinding binding;
     private static final String TAG = "Firebase";
     private DatabaseReference mDatabase;
-    private TextView test;
     double lat, lon;
 
     @Override
@@ -49,10 +52,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Refreshes Map Automatically
         addPostEventListener(mDatabase);
 
-
     }
 
-    //Retrives current coordinates and fall detection status from Firebase
+    //Retrives current coordinates from Firebase
     private void addPostEventListener(DatabaseReference mPostReference) {
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
@@ -66,13 +68,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng currentLoc = new LatLng(lat, lon);
                 mMap.addMarker(new MarkerOptions().position(currentLoc).title("Current Location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 13));
-
-                boolean fallStatus;
-                fallStatus = currentData.isFallStatus();
-                if(fallStatus)
-                {
-                    //notification
-                }
             }
 
             @Override
@@ -84,4 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
         mPostReference.addValueEventListener(postListener);
     }
+
+
+
 }
