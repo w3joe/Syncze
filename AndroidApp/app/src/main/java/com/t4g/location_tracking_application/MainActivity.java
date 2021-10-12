@@ -7,6 +7,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "123";
@@ -50,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
         pastBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
+                Intent i = new Intent(MainActivity.this, PastMapActivity.class);
                 startActivity(i);
+
             }
         });
     }
@@ -69,17 +74,24 @@ public class MainActivity extends AppCompatActivity {
                 fallStatus = currentData.isFallStatus();
                 if(fallStatus)
                 {
+                    //pending intent
+                    Intent falldetectedIntent = new Intent(MainActivity.this, FallDetectedActivity.class);
                     //notification
                     createNotificationChannel();
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(MainActivity.this);
+                    stackBuilder.addNextIntentWithParentStack(falldetectedIntent);
+                    // Get the PendingIntent containing the entire back stack
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     Integer notificationId = 123;
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
-                            .setSmallIcon(R.drawable.file_icon)
-                            .setContentTitle("textTitle")
-                            .setContentText("textContent")
+                            .setSmallIcon(R.drawable.fall_icon)
+                            .setContentTitle("Fall Detected!")
+                            .setContentText("A suspected fall has been detected.")
+                            .setContentIntent(resultPendingIntent)
                             .setPriority(NotificationCompat.PRIORITY_MAX);
                     notificationManager.notify(notificationId, builder.build());
-                    Toast.makeText(MainActivity.this, "works", Toast.LENGTH_SHORT).show();
                 }
             }
 

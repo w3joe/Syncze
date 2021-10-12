@@ -1,8 +1,11 @@
 package com.t4g.location_tracking_application;
+
+import java.util.ArrayList;
+
 public class CurrentData {
     private double currentLat, currentLon;
     private boolean fallStatus;
-    private PastLocation pastLocation;
+    private ArrayList<ArrayList<Double>> pastLocation;
 
     public double getCurrentLat() {
         return currentLat;
@@ -26,5 +29,13 @@ public class CurrentData {
 
     public void setFallStatus(boolean fallStatus) {
         this.fallStatus = fallStatus;
+    }
+
+    public ArrayList<ArrayList<Double>> getPastLocation() {
+        return pastLocation;
+    }
+
+    public void setPastLocation(ArrayList<ArrayList<Double>> pastLocation) {
+        this.pastLocation = pastLocation;
     }
 }

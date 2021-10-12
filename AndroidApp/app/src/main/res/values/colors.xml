@@ -8,7 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="synczepri">#1953FF</color>
-    <color name="synczesec">#1953FF</color>
+    <color name="synczesec">#7A9BFF</color>
     <color name="yellow">#FFF873</color>
     <color name="green">#C0FBA6</color>
+    <color name="red">#F36262</color>
 </resources>
