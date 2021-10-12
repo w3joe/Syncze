@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if(fallStatus)
                 {
                     //pending intent
-                    Intent falldetectedIntent = new Intent(MainActivity.this, FallDetectedActivity.class);
+                    Intent falldetectedIntent = new Intent(MainActivity.this, MapsActivity.class);
                     //notification
                     createNotificationChannel();
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);

@@ -57,7 +57,7 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     }
 
-    //Retrives current coordinates from Firebase
+    //Retrieves current coordinates from Firebase
     private void addPostEventListener(DatabaseReference mPostReference) {
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {

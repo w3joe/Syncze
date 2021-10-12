@@ -10,7 +10,10 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,10 +36,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +61,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String CHANNEL_ID = "124";
     private GoogleMap mMap;
     private static final String TAG = "Firebase";
     private DatabaseReference mDatabase;
@@ -63,6 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     double lat, lon;
     private Button StartGeoBtn, EndGeoBtn;
     private TextInputEditText SearchField, RadiusField;
+    private TextInputLayout SearchFieldL, RadiusFieldL;
+    private TextView Info;
     private String searchVal, radius;
 
     @Override
@@ -72,8 +80,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        binding = ActivityMapsBinding.inflate(getLayoutInflater());
 //        setContentView(binding.getRoot());
         StartGeoBtn = findViewById(R.id.startgeobtn);
+        EndGeoBtn = findViewById(R.id.endgeobtn);
+        EndGeoBtn.setVisibility(View.GONE);
+        Info = findViewById(R.id.infotext);
         SearchField = findViewById(R.id.searchinput);
+        SearchFieldL = findViewById(R.id.searchinputframe);
         RadiusField = findViewById(R.id.radiusinput);
+        RadiusFieldL = findViewById(R.id.radiusinputframe);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -83,10 +96,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         StartGeoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchVal = SearchField.getText().toString();
-                radius = RadiusField.getText().toString();
-                if (validateInputs(searchVal, radius))
-                    oneMapSearch();
+
+                    searchVal = SearchField.getText().toString();
+                    radius = RadiusField.getText().toString();
+                    if (validateInputs(searchVal, radius)) {
+                        oneMapSearch();
+                    }
+            }
+        });
+
+        EndGeoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delGeofromLocal();
+                updateUIStopped();
             }
         });
 
@@ -99,9 +122,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         //Refreshes Map Automatically
         addPostEventListener(mDatabase);
-
+        SharedPreferences sharedPref = getSharedPreferences("GEOFENCE",MODE_PRIVATE);
+        Double exLat = Double.valueOf(sharedPref.getString("sLat", "0.0"));
+        Double exLon = Double.valueOf(sharedPref.getString("sLon", "0.0"));
+        Integer exRadius = sharedPref.getInt("radius", 0);
+        if(exRadius != 0) {
+            LatLng exGeoPt = new LatLng(exLat, exLon);
+            drawCircle(exGeoPt, exRadius);
+            CompareCurrentoGeofence(mDatabase, exLat, exLon, exRadius);
+            updateUIStarted();
+        }
     }
 
+    Marker marker;
+    Circle circle;
     //Retrives current coordinates from Firebase
     private void addPostEventListener(DatabaseReference mPostReference) {
         // [START post_value_event_listener]
@@ -110,11 +144,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 CurrentData currentData = dataSnapshot.getValue(CurrentData.class);
-                mMap.clear();
+
+                if(null != marker) marker.remove();
                 lat = currentData.getCurrentLat();
                 lon = currentData.getCurrentLon();
                 LatLng currentLoc = new LatLng(lat, lon);
-                mMap.addMarker(new MarkerOptions().position(currentLoc).title("Current Location")
+                marker = mMap.addMarker(new MarkerOptions().position(currentLoc).title("Current Location")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_marker))
                         .snippet("Updated: Every 5 minutes")
                 );
@@ -156,8 +191,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Double sLat = ResultList.get(0).getLATITUDE();
                         Double sLon = ResultList.get(0).getLONGITUDE();
                         LatLng newGeoPt = new LatLng(sLat, sLon);
-                        drawCircle(newGeoPt);
-                        CompareCurrentoGeofence(mDatabase, sLat, sLon);
+                        Integer rad = Integer.valueOf(radius);
+                        drawCircle(newGeoPt, rad);
+                        saveGeotoLocal(sLat,sLon, rad);
+                        CompareCurrentoGeofence(mDatabase, sLat, sLon, rad);
                     }
                 }
             }
@@ -184,24 +221,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void drawCircle(LatLng point) {
-        Circle drawnCircle = null;
-
-        Integer rad = Integer.valueOf(radius);
+    private void drawCircle(LatLng point, Integer radius) {
+        updateUIStarted();
+        if(circle != null) circle.remove();
         // Instantiating CircleOptions to draw a circle around the marker
         CircleOptions circleOptions = new CircleOptions()
                 .center(point)
-                .radius(rad)
+                .radius(radius)
                 .strokeColor(R.color.synczepri)
                 .fillColor(R.color.synczesec)
                 .strokeWidth(5);
 
-        drawnCircle = mMap.addCircle(circleOptions);
+        circle = mMap.addCircle(circleOptions);
 
     }
 
+    private void saveGeotoLocal(Double sLat, Double sLon, Integer radius) {
+        SharedPreferences sharedPref = getSharedPreferences("GEOFENCE",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("sLat", String.valueOf(sLat));
+        editor.putString("sLon", String.valueOf(sLon));
+        editor.putInt("radius", radius);
+        editor.apply();
+    }
+
+    private void delGeofromLocal(){
+        SharedPreferences sharedPref = getSharedPreferences("GEOFENCE",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("sLat", "0.0");
+        editor.putString("sLon", "0.0");
+        editor.putInt("radius", 0);
+        editor.apply();
+    }
+
     //Retrives current coordinates from Firebase
-    private void CompareCurrentoGeofence(DatabaseReference mPostReference, Double sLat, Double sLon) {
+    private void CompareCurrentoGeofence(DatabaseReference mPostReference, Double sLat, Double sLon, Integer radius) {
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
             boolean inside = true;
@@ -212,11 +266,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Double pLat = currentData.getCurrentLat();
                 Double pLon = currentData.getCurrentLon();
 
-                    if (compareDist(sLat, sLon, pLat, pLon, Integer.valueOf(radius)) && inside == false) {
-                        Toast.makeText(MapsActivity.this, "In circle", Toast.LENGTH_SHORT).show();
+                    if (compareDist(sLat, sLon, pLat, pLon, radius) && inside == false) {
+                        Intent insideCircle = new Intent(MapsActivity.this, MapsActivity.class);
+                        createNotificationChannel();
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MapsActivity.this);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(MapsActivity.this);
+                        stackBuilder.addNextIntentWithParentStack(insideCircle);
+                        // Get the PendingIntent containing the entire back stack
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Integer notificationId = 123;
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MapsActivity.this, CHANNEL_ID)
+                                .setSmallIcon(R.drawable.past_person_marker)
+                                .setContentTitle("Geofence Alert")
+                                .setContentText("Wearer has entered the geofenced area.")
+                                .setContentIntent(resultPendingIntent)
+                                .setPriority(NotificationCompat.PRIORITY_MAX);
+                        notificationManager.notify(notificationId, builder.build());
                         inside = true;
-                    } else if(!compareDist(sLat, sLon, pLat, pLon, Integer.valueOf(radius)) && inside == true) {
-                        Toast.makeText(MapsActivity.this, "Outside circle", Toast.LENGTH_SHORT).show();
+                    } else if(!compareDist(sLat, sLon, pLat, pLon, radius) && inside == true) {
+                        Intent outsideCircle = new Intent(MapsActivity.this, MapsActivity.class);
+                        createNotificationChannel();
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MapsActivity.this);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(MapsActivity.this);
+                        stackBuilder.addNextIntentWithParentStack(outsideCircle);
+                        // Get the PendingIntent containing the entire back stack
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Integer notificationId = 123;
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MapsActivity.this, CHANNEL_ID)
+                                .setSmallIcon(R.drawable.past_person_marker)
+                                .setContentTitle("Geofence Alert")
+                                .setContentText("Wearer has exited the geofenced area.")
+                                .setContentIntent(resultPendingIntent)
+                                .setPriority(NotificationCompat.PRIORITY_MAX);
+                        notificationManager.notify(notificationId, builder.build());
                         inside = false;
                     } else {}
 
@@ -253,6 +337,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Fall Detection Channel";
+            String description = "Sends a notification if fall is detected";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
+    private void updateUIStarted(){
+        Info.setText(R.string.infostopping);
+        SearchField.setVisibility(View.GONE);
+        SearchFieldL.setVisibility(View.GONE);
+        RadiusFieldL.setVisibility(View.GONE);
+        RadiusField.setVisibility(View.GONE);
+        StartGeoBtn.setVisibility(View.GONE);
+        EndGeoBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void updateUIStopped(){
+        Info.setText(R.string.infostarting);
+        SearchField.setVisibility(View.VISIBLE);
+        RadiusField.setVisibility(View.VISIBLE);
+        SearchFieldL.setVisibility(View.VISIBLE);
+        RadiusFieldL.setVisibility(View.VISIBLE);
+        StartGeoBtn.setVisibility(View.VISIBLE);
+        EndGeoBtn.setVisibility(View.GONE);
+        circle.remove();
+    }
 
 }

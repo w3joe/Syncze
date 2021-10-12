@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Syncze</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="about">This application can be used to access your Syncze Watch anytime and view its current location. The live location will be updated every 5 minutes. To view the areas the user has been to, click "Past Records". 24 hours worth of location tracking will be stored in the database. It will be cleared the next day.</string>
+    <string name="about">This application can be used to access your Syncze Watch anytime and view its current location. The live location will be updated every 5 minutes. To view the areas the wearer has been to, click "Past Records". 24 hours worth of location tracking will be stored in the database. It will be cleared the next day.</string>
+    <string name="infostarting">Create a Geofence by entering the address below. Only 1 geofence can be created at a time.</string>
+    <string name="infostopping">You will receive a notification if the wearer enters/exit the geofence area.</string>
 </resources>
