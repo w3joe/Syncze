@@ -32,7 +32,7 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private static final String TAG = "Firebase";
     private DatabaseReference mDatabase;
-    double lat, lon;
+    private Integer firstTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +71,20 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
                 // Polylines are useful to show a route or some other connection between points.
                 List<LatLng> latlngs = new ArrayList<>();
                 int i;
+                //add all points
                 for(i = 0; i < Coordinates.size(); i++) {
 
                     Double lat = Coordinates.get(i).get(0);
                     Double lon = Coordinates.get(i).get(1);
+                    Double date = Coordinates.get(i).get(2);
+                    Double time = Coordinates.get(i).get(3);
 
-                    //set camera based on first coordinate
-                    if(i == 0){
+                    //set camera based on first coordinate and do it only once
+                    if(firstTime == 0){
                         LatLng firstPoint = new LatLng(lat,lon);
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstPoint, 12));
                     }
+
                     LatLng point = new LatLng(lat,lon);
                     latlngs.add(point);
                     int height = 60;
@@ -89,6 +93,7 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
                     BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
                     mMap.addMarker(new MarkerOptions().position(point).title("Coordinates: " + lat + ", " + lon)
+                            .snippet(formatTime(date, time))
                             .icon(smallMarkerIcon)
                                     );
                 }
@@ -96,6 +101,7 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
                         .clickable(true)
                         .color(R.color.synczepri)
                         .addAll(latlngs));
+                firstTime++;
             }
 
             @Override
@@ -108,5 +114,25 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
         mPostReference.addValueEventListener(postListener);
     }
 
+    private String formatTime(Double date, Double time)
+    {
+        String sdate = date.toString();
+        char[] cdate = new char[sdate.length()];
+        for (int i = 0; i < sdate.length(); i++) {
+            cdate[i] = sdate.charAt(i);
+        }
+        String fdate = String.valueOf(cdate[7]) + String.valueOf(cdate[8]) + "/" + String.valueOf(cdate[5]) + String.valueOf(cdate[6]) + "/"
+                + String.valueOf(cdate[0]) + String.valueOf(cdate[2]) + String.valueOf(cdate[3]) + String.valueOf(cdate[4]);
 
+        String stime = time.toString();
+        char[] ctime = new char[stime.length()];
+        for (int i = 0; i < stime.length(); i++) {
+            ctime[i] = stime.charAt(i);
+        }
+        String ftime = String.valueOf(ctime[0]) + String.valueOf(ctime[1]) + ":" + String.valueOf(ctime[2]) + String.valueOf(ctime[3])
+                + ":" + String.valueOf(ctime[4]) + String.valueOf(ctime[5]);
+
+        String formatted = "Timestamp: " + fdate + " at " + ftime;
+        return formatted;
+    }
 }
