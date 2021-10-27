@@ -129,9 +129,14 @@ public class PastMapActivity extends FragmentActivity implements OnMapReadyCallb
         for (int i = 0; i < stime.length(); i++) {
             ctime[i] = stime.charAt(i);
         }
-        String ftime = String.valueOf(ctime[0]) + String.valueOf(ctime[1]) + ":" + String.valueOf(ctime[2]) + String.valueOf(ctime[3])
-                + ":" + String.valueOf(ctime[4]) + String.valueOf(ctime[5]);
-
+        String ftime = "";
+        if(time < 99999) {
+        ftime ="0" + String.valueOf(ctime[0]) +":"+ String.valueOf(ctime[1]) + String.valueOf(ctime[2]) + ":" + String.valueOf(ctime[3])
+                + String.valueOf(ctime[4]);
+        }
+        else { ftime =String.valueOf(ctime[0]) + String.valueOf(ctime[1]) + ":" + String.valueOf(ctime[2]) + String.valueOf(ctime[3])
+                    + ":" + String.valueOf(ctime[4]) + String.valueOf(ctime[5]);
+        }
         String formatted = "Timestamp: " + fdate + " at " + ftime;
         return formatted;
     }
