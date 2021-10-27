@@ -1,4 +1,36 @@
-# Tracker-Watch
+# Syncze Tracker-Watch
+
+The goal of this github is to create a tracking watch with fall detection system such that the location of the watch can be seen on an android app at all time. We used google api geolocation as it allows the app to locate the watch even at underground, something satelite geolocation are unable to do.
+
+# Features
+Geolocation (Tracking) <br/>
+Fall detection <br/>
+Geofence <br/>
+App display <br/>
 
 
-Hi
+# Component used:
+MPU6050 x1 <br/>
+Esp32 Wroom 32 x1 <br/>
+FT232RL x1 <br/>
+
+# Uploading code to Esp32 Wroom 32
+For this project we will be using arduino ide to code our esp32. As the esp32 is only a chip, we would need a medium to upload the code into it. That is where the FT232RL comes in. ![Screenshot 2021-10-27 202128](https://user-images.githubusercontent.com/85302236/139065392-ed45c164-de73-4d6c-bd9f-b7a398ceec3a.png) <br/>
+In the arduino ide, change the development board to esp32 Dev Module.
+
+
+# Geolocation 
+For geolocation, all we need is our esp32 Wroom 32.
+Google takes the input of our nearby WiFi routers and gives us the coordinates. For that, Google provides API and in that API we need to provide some inputs like details of nearby WiFi routers, detail of nearby cell towers etc. Before using that API you need to get your API key working. To create your own Google geolocation API key, and to learn how Google’s geolocation API works, go to https://developers.google.com/maps/documentation/geolocation/overview.<br>
+If you just want to try out the geolocation, you can just watch this video. <b> *Note: </b> Check the pin of the connection as the video is using a esp8266. <br/>
+https://www.youtube.com/watch?v=9CmGMYnHR-U&t=455s<br/>
+
+
+
+
+
+
+
+ 
+
+
