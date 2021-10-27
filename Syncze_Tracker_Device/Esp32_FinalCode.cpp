@@ -16,10 +16,10 @@
 #include "addons/RTDBHelper.h"
 
 // Insert Firebase project API Key
-#define API_KEY "AIzaSyCD3q_xYnp1vhJftmOOvjgfm3vr801AcoM"
+#define API_KEY "_____________"
 
 // Insert RTDB URLefine the RTDB URL */
-#define DATABASE_URL "https://t4g-watch-tracker-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define DATABASE_URL "___________"
 
 //Define Firebase Data object
 FirebaseData fbdo;
@@ -50,13 +50,13 @@ int t;
  int angleChange = 0;
  // WiFi network info.
  
- const char *ssid = ""; // Enter your Wi-Fi Name
- const char *pass = ""; // Enter your Wi-Fi Password
+ const char *ssid = "_____________"; // Enter your Wi-Fi Name
+ const char *pass = "_______________"; // Enter your Wi-Fi Password
 
  //Credentials for Google GeoLocation API...
 const char* Host = "www.googleapis.com";
 String thisPage = "/geolocation/v1/geolocate?key=";
-String key = "AIzaSyAI41F0sQh0zj3E-mw_68XxYIAmqj88d2g";
+String key = "_________________";
 
 int status = WL_IDLE_STATUS;
 String jsonString = "{\n";
@@ -344,10 +344,10 @@ if (trigger2count >= 6) { //allow 0.5s for orientation change
   
   //Connect to the client and make the api call
   Serial.print("Requesting URL: ");
-  Serial.println("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAI41F0sQh0zj3E-mw_68XxYIAmqj88d2g");
+  Serial.println("https://www.googleapis.com/geolocation/v1/geolocate?key=______________________________");
   Serial.println(" ");
 
-  //client.setPrivateKey("AIzaSyAI41F0sQh0zj3E-mw_68XxYIAmqj88d2g");
+  //client.setPrivateKey("_______________________________");
   client.setInsecure();//skip verification
   if (client.connect(Host, 443)) {
     Serial.println("Connected");
