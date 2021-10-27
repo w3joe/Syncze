@@ -25,7 +25,7 @@ Google takes the input of our nearby WiFi routers and gives us the coordinates. 
 If you just want to try out the geolocation, you can just watch [this video](https://www.youtube.com/watch?v=9CmGMYnHR-U&t=455s) <b> *Note: </b> Check the pin of the connection as the video is using a esp8266. <br/>
 
 
-Wee joe talks about firebase and android 
+
 
 
 # Fall detection
