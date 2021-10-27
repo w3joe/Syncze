@@ -50,8 +50,8 @@ int t;
  int angleChange = 0;
  // WiFi network info.
  
- const char *ssid = "iPhone"; // Enter your Wi-Fi Name
- const char *pass = "23456789"; // Enter your Wi-Fi Password
+ const char *ssid = ""; // Enter your Wi-Fi Name
+ const char *pass = ""; // Enter your Wi-Fi Password
 
  //Credentials for Google GeoLocation API...
 const char* Host = "www.googleapis.com";
