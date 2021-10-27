@@ -22,8 +22,8 @@ In the arduino ide, change the development board to esp32 Dev Module.
 # Geolocation 
 For geolocation, all we need is our esp32 Wroom 32.
 Google takes the input of our nearby WiFi routers and gives us the coordinates. For that, Google provides API and in that API we need to provide some inputs like details of nearby WiFi routers, detail of nearby cell towers etc. Before using that API you need to get your API key working. To create your own Google geolocation API key, and to learn how Google’s geolocation API works, go to https://developers.google.com/maps/documentation/geolocation/overview.<br>
-If you just want to try out the geolocation, you can just watch this video. <b> *Note: </b> Check the pin of the connection as the video is using a esp8266. <br/>
-https://www.youtube.com/watch?v=9CmGMYnHR-U&t=455s<br/>
+If you just want to try out the geolocation, you can just watch [this video](https://www.youtube.com/watch?v=9CmGMYnHR-U&t=455s) <b> *Note: </b> Check the pin of the connection as the video is using a esp8266. <br/>
+
 
 Wee joe talks about firebase and android 
 
