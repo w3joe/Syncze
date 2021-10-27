@@ -388,8 +388,8 @@ if (trigger2count >= 6) { //allow 0.5s for orientation change
   Serial.println(latitude, 6);
   Serial.print("Longitude = ");
   Serial.println(longitude, 6);
-  //Serial.print("Accuracy = ");
-  //Serial.println(accuracy);
+  Serial.print("Accuracy = ");
+  Serial.println(accuracy);
 
   if (Firebase.RTDB.setFloat(&fbdo, "currentLat", latitude)){
       Serial.println("PASSED");
