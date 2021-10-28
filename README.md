@@ -1,7 +1,7 @@
 # Introduction
 The goal is to create a tracking watch with fall detection system such that the location of the watch can be seen on an android app at all time. We used google API geolocation as it allows the app to locate the watch even underground, something satelite geolocation may be unable to do. We wanted to create an open-source and cost-effective solution for basic tracking functionalities, to ensure that the wearer of this device is safe.
 
-
+![image](https://user-images.githubusercontent.com/84664178/139240601-24b1171d-1ba2-4abe-9304-110b3bdbbe8d.png)
 
 # Syncze Tracker Watch
 
