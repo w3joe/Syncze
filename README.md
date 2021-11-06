@@ -33,14 +33,5 @@ If you just want to try out the geolocation, you can just watch [this video](htt
 
 
 
-# Fall detection
-
-
-# Work in Progress
-
-# Syncze Android Application
-
-# Work in Progress
- 
 
 
