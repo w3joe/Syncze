@@ -5,6 +5,10 @@ The goal is to create a tracking watch with fall detection system such that the 
 
 # Syncze Tracker Watch
 
+<img width="836" alt="Screenshot 2022-03-06 152944" src="https://user-images.githubusercontent.com/84664178/156913532-74359ad1-b1e4-4a51-947e-8802b468b7a7.png">
+<img width="683" alt="Screenshot 2022-03-06 152915" src="https://user-images.githubusercontent.com/84664178/156913536-9ba622fc-b187-4a5b-aaaa-49f35e44a879.png">
+<img width="1304" alt="Screenshot 2022-03-06 153215" src="https://user-images.githubusercontent.com/84664178/156913627-293e6a4b-6142-49b1-a1cc-ed182b4a9f3a.png">
+<img width="1301" alt="Screenshot 2022-03-06 153203" src="https://user-images.githubusercontent.com/84664178/156913628-7dd2f19e-ce71-4b0f-8eac-f86fd16ec1f0.png">
 
 
 # Features
